@@ -1,0 +1,39 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+  become: false
+  tasks:
+    - name: iTop get example
+      ansible2itop:
+        action: 'get'
+        itop_url: 'https://itop.company.com/itop/web/webservices/rest.php?version=1.3'
+        username: 'someone'
+        password: 'secret'
+        itop_class: 'ApplicationSolution'
+        oql_query: "SELECT ApplicationSolution WHERE name = 'Expensive and Bad Application'"
+        validate_certs: no
+        itop_fields: '*'
+      register: testout
+    - name: dump test output
+      debug:
+        msg: '{{ testout["output"]["items"][0] }}'
+
+    - pause:
+    - name: iTop create example
+      ansible2itop:
+        action: 'create'
+        itop_url: 'https://itop.company.com/itop/web/webservices/rest.php?version=1.3'
+        username: 'someone'
+        password: 'secret'
+        itop_class: 'VirtualMachine'
+        validate_certs: no
+        itop_fields:
+          name: "vmtest1"
+          org_id: 1
+          virtualhost_id: 123456
+          status: "implementation"
+      register: testout
+    - name: dump test output
+      debug:
+        msg: '{{ testout }}'
