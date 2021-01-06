@@ -6,6 +6,7 @@ import sys
 import requests
 import json
 import urllib3
+import ast
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -132,7 +133,8 @@ RETURN = r'''
 
 from ansible.module_utils.basic import AnsibleModule
 def createItop(itopurl,field,classname,validate_certs,authuser,authpass,comment):
-  fieldsan=json.loads(field.replace("'",'"'))
+  fielda=ast.literal_eval(field)
+  fieldsan=json.loads(json.dumps(fielda))
   json_data = {
    "operation": "core/create",
    "class": classname,
